@@ -10,7 +10,7 @@ import "../../scss/components/shared/SnapshotForm.scss";
 import { Utilities } from "../../utilities/utilities";
 
 
-class SnapshotDetailsSettings extends Component {
+class SnapshotSettings extends Component {
   state = {
     snapshotSettings: null,
     isLoadingSnapshotSettings: true,
@@ -20,7 +20,8 @@ class SnapshotDetailsSettings extends Component {
     hideCheckVeleroButton: false,
     updateConfirm: false,
     updatingSettings: false,
-    updateErrorMsg: ""
+    updateErrorMsg: "",
+    configureSnapshotsModal: false
   };
 
   fetchSnapshotSettings = (isCheckForVelero) => {
@@ -63,8 +64,17 @@ class SnapshotDetailsSettings extends Component {
       })
   }
 
-  componentDidMount = () => {
+  componentDidMount() {
     this.fetchSnapshotSettings();
+  }
+
+  componentDidUpdate(lastProps, lastState) {
+    if (this.state.snapshotSettings !== lastState.snapshotSettings && this.state.snapshotSettings) {
+      if (this.state.snapshotSettings?.veleroVersion === "") {
+        this.props.history.push("/snapshots/settings?configure=true");
+        this.setState({ configureSnapshotsModal: true });
+      }
+    }
   }
 
   toggleSnapshotView = (isEmptyView) => {
@@ -122,9 +132,21 @@ class SnapshotDetailsSettings extends Component {
     return <p className="u-color--chestnut u-fontSize--small u-fontWeight--medium u-lineHeight--normal u-marginTop--12">Not able to find Velero</p>
   }
 
+  toggleConfigureModal = () => {
+    if (this.state.configureSnapshotsModal) {
+      this.setState({ configureSnapshotsModal: false }, () => {
+        this.props.history.push("/snapshots/settings");
+      });
+    } else {
+      this.setState({ configureSnapshotsModal: true }, () => {
+        this.props.history.push("/snapshots/settings?configure=true");
+      });
+    }
+  };
+
 
   render() {
-    const { isLoadingSnapshotSettings, toggleSnapshotView, snapshotSettings, hideCheckVeleroButton, updateConfirm, updatingSettings, updateErrorMsg, isEmptyView } = this.state;
+    const { isLoadingSnapshotSettings, snapshotSettings, hideCheckVeleroButton, updateConfirm, updatingSettings, updateErrorMsg, isEmptyView } = this.state;
     const isLicenseUpload = !!this.props.history.location.search;
 
     if (isLoadingSnapshotSettings) {
@@ -138,29 +160,25 @@ class SnapshotDetailsSettings extends Component {
     return (
       <div className="container flex-column flex1 u-overflow--auto u-paddingTop--30 u-paddingBottom--20 u-marginTop--10 alignItems--center">
         <Helmet>
-          <title>Snapshots</title>
+          <title>Snapshot Settings</title>
         </Helmet>
-        {(toggleSnapshotView || (snapshotSettings?.veleroVersion !== "")) ?
-          <SnapshotStorageDestination
-            snapshotSettings={snapshotSettings}
-            updateSettings={this.updateSettings}
-            fetchSnapshotSettings={this.fetchSnapshotSettings}
-            updateConfirm={updateConfirm}
-            updatingSettings={updatingSettings}
-            updateErrorMsg={updateErrorMsg}
-            renderNotVeleroMessage={this.renderNotVeleroMessage}
-            toggleSnapshotView={this.toggleSnapshotView}
-            isEmptyView={isEmptyView}
-            hideCheckVeleroButton={hideCheckVeleroButton}
-            isLicenseUpload={isLicenseUpload} /> :
-          <ConfigureSnapshots
-            snapshotSettings={snapshotSettings}
-            fetchSnapshotSettings={this.fetchSnapshotSettings}
-            renderNotVeleroMessage={this.renderNotVeleroMessage}
-            hideCheckVeleroButton={hideCheckVeleroButton} />}
+        <SnapshotStorageDestination
+          snapshotSettings={snapshotSettings}
+          updateSettings={this.updateSettings}
+          fetchSnapshotSettings={this.fetchSnapshotSettings}
+          updateConfirm={updateConfirm}
+          updatingSettings={updatingSettings}
+          updateErrorMsg={updateErrorMsg}
+          renderNotVeleroMessage={this.renderNotVeleroMessage}
+          toggleSnapshotView={this.toggleSnapshotView}
+          isEmptyView={isEmptyView}
+          hideCheckVeleroButton={hideCheckVeleroButton}
+          isLicenseUpload={isLicenseUpload}
+          configureSnapshotsModal={this.state.configureSnapshotsModal}
+          toggleConfigureModal={this.toggleConfigureModal} />
       </div>
     );
   }
 }
 
-export default withRouter(SnapshotDetailsSettings);
+export default withRouter(SnapshotSettings);

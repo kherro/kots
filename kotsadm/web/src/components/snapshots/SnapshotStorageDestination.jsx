@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import Select from "react-select";
-import { withRouter, Link } from "react-router-dom"
+import { withRouter } from "react-router-dom"
 import MonacoEditor from "react-monaco-editor";
 import find from "lodash/find";
+
+import ConfigureSnapshots from "./ConfigureSnapshots";
 
 import "../../scss/components/shared/SnapshotForm.scss";
 
@@ -647,6 +649,11 @@ class SnapshotStorageDestination extends Component {
 
     return (
       <div className="flex1 flex-column">
+        <p className="u-marginBottom--20 u-fontSize--small u-color--tundora u-fontWeight--medium">
+          <span className="replicated-link" onClick={() => this.props.history.goBack()}>Snapshots</span>
+          <span className="u-color--dustyGray"> &gt; </span>
+            Settings
+          </p>
         <p className="u-fontSize--normal u-marginBottom--15 u-fontWeight--bold u-color--tundora">Snapshot settings</p>
         <div className="flex">
           <div className="flex flex-column u-marginRight--50">
@@ -655,7 +662,10 @@ class SnapshotStorageDestination extends Component {
               {updateErrorMsg &&
                 <div className="flex u-fontWeight--bold u-fontSize--small u-color--red u-marginBottom--10">{updateErrorMsg}</div>}
               <div className="flex flex-column u-marginBottom--20">
-                <p className="u-fontSize--normal u-color--tuna u-fontWeight--bold u-lineHeight--normal u-marginBottom--10">Destination</p>
+                <div className="flex flex1 justifyContent--spaceBetween alignItems--center">
+                  <p className="u-fontSize--normal u-color--tuna u-fontWeight--bold u-lineHeight--normal u-marginBottom--10">Destination</p>
+                  <span className="replicated-link u-fontSize--normal flex justifyContent--flexEnd u-cursor--pointer" onClick={() => this.props.toggleConfigureModal(this.props.history)}> + Add a new storage destination </span>
+                </div>
                 {!snapshotSettings?.isVeleroRunning &&
                   <div className="flex u-fontWeight--bold u-fontSize--small u-color--red u-marginBottom--10"> Please fix Velero so that the deployment is running. <a href="https://kots.io/kotsadm/snapshots/troubleshooting/" target="_blank" rel="noopener noreferrer" className="replicated-link u-marginLeft--5">View docs</a>  </div>}
                 <div className="flex1">
@@ -708,6 +718,15 @@ class SnapshotStorageDestination extends Component {
           </div>
           <SnapshotSchedule />
         </div>
+        {this.props.configureSnapshotsModal &&
+          <ConfigureSnapshots
+            snapshotSettings={this.props.snapshotSettings}
+            fetchSnapshotSettings={this.props.fetchSnapshotSettings}
+            renderNotVeleroMessage={this.props.renderNotVeleroMessage}
+            hideCheckVeleroButton={this.props.hideCheckVeleroButton}
+            configureSnapshotsModal={this.props.configureSnapshotsModal}
+            toggleConfigureModal={this.props.toggleConfigureModal}
+          />}
       </div>
     );
   }

@@ -8,7 +8,7 @@ dayjs.extend(isSameOrAfter);
 import { Utilities } from "../../utilities/utilities";
 
 
-class SnapshotDetailsRow extends React.Component {
+class SnapshotRow extends React.Component {
 
   handleDeleteClick = snapshot => {
     this.props.toggleConfirmDeleteModal(snapshot);
@@ -64,4 +64,4 @@ class SnapshotDetailsRow extends React.Component {
   }
 }
 
-export default SnapshotDetailsRow;
+export default SnapshotRow;
