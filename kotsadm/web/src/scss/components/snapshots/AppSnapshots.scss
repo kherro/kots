@@ -105,3 +105,44 @@
   box-sizing: border-box;
   border-radius: 6px;
 }
+
+.DummySnapshotRow--wrapper {
+  background: #F8F8F8;
+  border-radius: 4px;
+  margin-bottom: 15px; 
+  height: 64px;
+  padding: 12px;
+
+  .EmptyRow {
+    background: #EAEAEA;
+    border-radius: 2px;
+
+    &.name {
+      width: 179px;
+      height: 14px;
+    }
+    &.created {
+      width: 120px;
+      height: 12px;
+    }
+    &.finished {
+      width: 200px;
+      height: 12px;
+    }
+    &.volumeSize {
+      width: 50px;
+      height: 16px;
+    }
+    &.volumes {
+      width: 100px;
+      height: 16px;
+    }
+  }
+
+  .EmptyCircle {
+    background: #EAEAEA;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+  }
+}

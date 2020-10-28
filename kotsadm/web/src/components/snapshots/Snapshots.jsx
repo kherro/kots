@@ -4,6 +4,7 @@ import Helmet from "react-helmet";
 import SnapshotRow from "./SnapshotRow";
 import BackupRestoreModal from "../modals/BackupRestoreModal";
 import DeleteSnapshotModal from "../modals/DeleteSnapshotModal";
+import DummySnapshotRow from "./DummySnapshotRow";
 
 import "../../scss/components/snapshots/AppSnapshots.scss";
 
@@ -41,44 +42,47 @@ class Snapshots extends Component {
 
   render() {
     const snapshots = [
-      {
-        appID: "1jR0VjB2Vm1lxrqoE3H0BTer6rd",
-        expiresAt: "2020-11-25T22:56:15Z",
-        finishedAt: "2020-10-26T22:56:22Z",
-        name: "qakots-g4bjh",
-        sequence: 0,
-        startedAt: "2020-10-26T22:56:15Z",
-        status: "PartiallyFailed",
-        supportBundleId: "backup-qakots-g4bjh",
-        trigger: "manual",
-        volumeBytes: 0,
-        volumeCount: 0,
-        volumeSizeHuman: "0B",
-        volumeSuccessCount: 0
-      },
-      {
-        appID: "1jR0VjB2Vm1lxrqoE3H0BTer6rk",
-        expiresAt: "2020-11-27T20:56:15Z",
-        finishedAt: "2020-10-26T20:56:22Z",
-        name: "qakots-g4bjk",
-        sequence: 0,
-        startedAt: "2020-10-25T20:56:15Z",
-        status: "Completed",
-        supportBundleId: "backup-qakots-g4bjh",
-        trigger: "manual",
-        volumeBytes: 4,
-        volumeCount: 0,
-        volumeSizeHuman: "4B",
-        volumeSuccessCount: 0
-      }
+      // {
+      //   appID: "1jR0VjB2Vm1lxrqoE3H0BTer6rd",
+      //   expiresAt: "2020-11-25T22:56:15Z",
+      //   finishedAt: "2020-10-26T22:56:22Z",
+      //   name: "qakots-g4bjh",
+      //   sequence: 0,
+      //   startedAt: "2020-10-26T22:56:15Z",
+      //   status: "PartiallyFailed",
+      //   supportBundleId: "backup-qakots-g4bjh",
+      //   trigger: "manual",
+      //   volumeBytes: 0,
+      //   volumeCount: 0,
+      //   volumeSizeHuman: "0B",
+      //   volumeSuccessCount: 0
+      // },
+      // {
+      //   appID: "1jR0VjB2Vm1lxrqoE3H0BTer6rk",
+      //   expiresAt: "2020-11-27T20:56:15Z",
+      //   finishedAt: "2020-10-26T20:56:22Z",
+      //   name: "qakots-g4bjk",
+      //   sequence: 0,
+      //   startedAt: "2020-10-25T20:56:15Z",
+      //   status: "Completed",
+      //   supportBundleId: "backup-qakots-g4bjh",
+      //   trigger: "manual",
+      //   volumeBytes: 4,
+      //   volumeCount: 0,
+      //   volumeSizeHuman: "4B",
+      //   volumeSuccessCount: 0
+      // }
     ]
+
+    const dummyMap = [0, 1, 2, 3, 4, 5];
+
     return (
       <div className="container flex-column flex1 u-overflow--auto u-paddingTop--30 u-paddingBottom--20 alignItems--center">
         <Helmet>
           <title>Snapshots</title>
         </Helmet>
         <div className="AppSnapshots--wrapper flex1 flex-column u-width--full">
-          <div className="flex flex-auto alignItems--flexStart justifyContent--spaceBetween u-borderBottom--gray darker">
+          <div className={`flex flex-auto alignItems--flexStart justifyContent--spaceBetween ${snapshots?.length > 0 && "u-borderBottom--gray darker"}`}>
             <p className="u-fontWeight--bold u-color--tuna u-fontSize--larger u-lineHeight--normal u-marginBottom--15">Snapshots</p>
             <div className="flex u-marginBottom--15">
               <Link to={`/snapshots/settings`} className="replicated-link u-fontSize--small u-fontWeight--bold u-marginRight--20 flex alignItems--center"><span className="icon snapshotSettingsIcon u-marginRight--5" />Settings</Link>
@@ -87,16 +91,24 @@ class Snapshots extends Component {
               </span>
             </div>
           </div>
-          <div className="flex flex-column">
-            {snapshots?.map((snapshot, i) => (
-              <SnapshotRow
-                key={`snapshot-${snapshot.name}-${snapshot.started}`}
-                snapshot={snapshot}
-                toggleConfirmDeleteModal={this.toggleConfirmDeleteModal}
-                toggleRestoreModal={this.toggleRestoreModal}
-              />
-            ))}
-          </div>
+          {snapshots?.length > 0 ?
+            <div className="flex flex-column">
+              {snapshots?.map((snapshot) => (
+                <SnapshotRow
+                  key={`snapshot-${snapshot.name}-${snapshot.started}`}
+                  snapshot={snapshot}
+                  toggleConfirmDeleteModal={this.toggleConfirmDeleteModal}
+                  toggleRestoreModal={this.toggleRestoreModal}
+                />
+              ))}
+            </div> :
+            <div className="flex flex-column">
+              {dummyMap.map((el) => (
+                <DummySnapshotRow
+                  key={el}
+                />
+              ))}
+            </div>}
         </div>
         {this.state.deleteSnapshotModal &&
           <DeleteSnapshotModal
